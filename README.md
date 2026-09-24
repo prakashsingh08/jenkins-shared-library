@@ -51,7 +51,34 @@ jenkins-shared-library/
 └── README.md              ← you are here
 ```
 
-Right now `vars/` is **deliberately empty** — you create every file yourself, starting in Phase 2.
+### Step naming: one version per phase
+
+Steps in this repo carry the phase that introduced them — `helloP2`, `greetP3`, `buildAppP3`,
+`buildAppP4`. When a later phase changes a step, it gets a **new file** rather than overwriting the
+old one:
+
+```text
+vars/buildAppP3.groovy    positional argument, no validation   (Phase 3)
+vars/buildAppP4.groovy    Map config, defaults, validation     (Phase 4)
+```
+
+Both stay runnable, so a Jenkinsfile can call them side by side and you can see exactly what each
+phase changed. A production library would not do this — it would have one `buildApp` and use Git
+history — but here the point is comparing the versions, not shipping them.
+
+The names must stay flat and camelCase: Jenkins does not load subfolders inside `vars/`, and the
+file name *is* the step name.
+
+`examples/` follows the same idea — one Jenkinsfile per phase, each meant for its own Jenkins job:
+
+```text
+examples/phase02-hello.Jenkinsfile        → job  shared-lib-phase02
+examples/phase03-arguments.Jenkinsfile    → job  shared-lib-phase03
+examples/phase04-map-config.Jenkinsfile   → job  shared-lib-phase04
+```
+
+Separate jobs mean every phase stays runnable: you can go back and re-run Phase 2 after finishing
+Phase 4, without editing anything.
 
 * `vars/` — lowerCamelCase file names, because the file name *is* the step name. `vars/BuildApp.groovy`
   would give you a step called `BuildApp()`, which looks wrong in a Jenkinsfile.

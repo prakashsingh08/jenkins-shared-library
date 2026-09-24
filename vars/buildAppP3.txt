@@ -1,0 +1,28 @@
+<p>
+    <strong>Phase 3 version.</strong> Builds an application, taking the name as a positional
+    argument. The Maven build is <em>pretended</em> with <code>echo</code>.
+    See <code>buildAppP4</code> for the Map-configured version with defaults and validation.
+</p>
+
+<h3>Usage</h3>
+<pre>
+buildAppP3('catalog')        // build the application called catalog
+
+script {                     // a method call on an object needs script { } in Declarative
+    buildAppP3.cleanup()
+}
+</pre>
+
+<h3>Parameters</h3>
+<ul>
+    <li><code>appName</code> (String, <strong>required</strong>) — the name of the application to
+        build. Interpolated into a shell command with no validation, so it must not come from
+        untrusted input. <code>buildAppP4</code> fixes this.</li>
+</ul>
+
+<h3>Methods</h3>
+<ul>
+    <li><code>buildAppP3(appName)</code> — builds the application.</li>
+    <li><code>buildAppP3.cleanup()</code> — cleans up the workspace. Must be called with the method
+        name; <code>cleanup()</code> on its own is not a step.</li>
+</ul>

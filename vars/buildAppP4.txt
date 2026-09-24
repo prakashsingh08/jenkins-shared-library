@@ -1,0 +1,40 @@
+<p>
+    <strong>Phase 4 version.</strong> Builds an application, configured with a Map instead of
+    positional arguments. Applies defaults, validates input and fails fast before any shell
+    command runs. The Maven build is still <em>pretended</em> with <code>echo</code>.
+</p>
+
+<h3>Usage</h3>
+<pre>
+buildAppP4(name: 'catalog')
+buildAppP4(name: 'catalog', skipTests: true)
+buildAppP4(name: 'catalog', image: 'maven:3.8', skipTests: false)
+
+script {                     // a method call on an object needs script { } in Declarative
+    buildAppP4.cleanup()
+}
+</pre>
+
+<h3>Configuration</h3>
+<table>
+    <tr><th>Key</th><th>Type</th><th>Required</th><th>Default</th></tr>
+    <tr><td><code>name</code></td><td>String</td><td><strong>yes</strong></td><td>—</td></tr>
+    <tr><td><code>image</code></td><td>String</td><td>no</td><td><code>maven:3.9-eclipse-temurin-17</code></td></tr>
+    <tr><td><code>skipTests</code></td><td>boolean</td><td>no</td><td><code>false</code></td></tr>
+</table>
+
+<h3>Validation</h3>
+<ul>
+    <li><code>name</code> must be present and non-empty.</li>
+    <li><code>name</code> must match <code>^[A-Za-z0-9._-]+$</code> — letters, digits, dot, dash and
+        underscore only. This blocks shell metacharacters, so the value is safe to interpolate into
+        a command.</li>
+    <li>Unknown keys are currently ignored. A typo such as <code>skpTests:</code> will not be
+        reported.</li>
+</ul>
+
+<h3>Methods</h3>
+<ul>
+    <li><code>buildAppP4(Map)</code> — builds the application.</li>
+    <li><code>buildAppP4.cleanup()</code> — cleans up the workspace.</li>
+</ul>
