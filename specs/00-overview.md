@@ -35,7 +35,7 @@ Phase 2's Jenkins job exists.
 
 | # | Spec | Concepts introduced | You produce | Status |
 |---|---|---|---|---|
-| 1 | [01-setup-and-repo-layout.md](01-setup-and-repo-layout.md) | Why `vars/` / `src/` / `resources/`; Git doesn't track empty folders; branches vs tags as library versions; HTTPS vs SSH remotes | This repo committed and pushed to GitHub; Jenkins reachable on `localhost:8080` | **Ready to do** |
+| 1 | [01-setup-and-repo-layout.md](01-setup-and-repo-layout.md) | Why `vars/` / `src/` / `resources/`; Git doesn't track empty folders; branches vs tags as library versions; HTTPS vs SSH remotes | This repo committed and pushed to GitHub; Jenkins reachable on `localhost:8080` | **Done** |
 | 2 | [02-first-step-hello.md](02-first-step-hello.md) (+ [02a — how `hello()` works, the slow version](02a-how-hello-works-explained.md), [02b — questions & clarifications](02b-questions-and-clarifications.md)) | `call()`, `@Library`, the `_`, registering a Global Pipeline Library in the Jenkins UI, reading library errors | `vars/hello.groovy` + a `hello-library-demo` pipeline job that prints it | **Ready to do** |
 | 3 | [03-steps-with-arguments.md](03-steps-with-arguments.md) | Method arguments, `'` vs `"` interpolation, shell injection, extra methods (`buildApp.cleanup()`), optional parens, `.txt` docs | `vars/greet.groovy`, `vars/buildApp.groovy`, `vars/buildApp.txt` | **Ready to do** |
 | 4 | [04-configuration-as-a-map.md](04-configuration-as-a-map.md) | Groovy Maps, named arguments as one Map, Groovy truth, Elvis vs `get(k, default)`, validating input, failing fast with `error` | `buildApp(name: 'catalog', skipTests: true)` with defaults and an allow-list check | **Ready to do** |
@@ -79,8 +79,9 @@ You do **not** need a local Groovy or JDK install. All Groovy in this course run
 
 **Note on the current state of this repo:** `vars/` has been **emptied on purpose** — the earlier
 `hello.groovy` / `buildApp.groovy` / `buildApp.txt` from the `groovy-learning` course were removed so
-you start from a clean slate and type every file yourself. The `main` branch also has **no commits
-yet**; Phase 1 makes the first commit and push, which is what finally lets Jenkins clone this repo.
+you start from a clean slate and type every file yourself. Phase 1 is done: the skeleton
+(`vars/`, `src/`, `resources/`, `examples/`, `.gitignore`) is committed and pushed to `main`, so
+Jenkins can clone the repo. Everything from Phase 2 onward is still yours to write.
 
 ## Working agreement
 
