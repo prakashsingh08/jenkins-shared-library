@@ -298,6 +298,54 @@ cleanup()           // ✗ No such DSL method 'cleanup'
 Jenkins only published **one** name to your Jenkinsfile: `buildApp`, from the file name. It never
 published `cleanup`. So `cleanup()` on its own means nothing.
 
+### Calling it from a Declarative pipeline needs `script { }`
+
+Here is the part that surprises everyone the first time:
+
+```groovy
+steps {
+    buildApp('catalog')      // ✓ fine — this is a step call
+    buildApp.cleanup()       // ✗ Method calls on objects not allowed outside "script" blocks
+}
+```
+
+Both lines call your library. Declarative accepts the first and rejects the second. The reason is
+what each line *looks like* to the Declarative parser:
+
+```text
+buildApp('catalog')      a name followed by arguments   →  "that is a step"       ✓
+buildApp.cleanup()       a method called ON an object   →  "that is Groovy code"  ✗
+```
+
+A `steps { }` block may only contain **step calls**. Anything that is general Groovy — a method call
+on an object, an assignment, an `if`, a `for` loop — has to go inside a `script { }` block:
+
+```groovy
+steps {
+    script {
+        buildApp.cleanup()
+    }
+}
+```
+
+`script { }` is Declarative's escape hatch: *"the strict rules stop here, treat this as ordinary
+Groovy."*
+
+You will also see a puzzling second error on the same line:
+
+```text
+Missing required parameter: "message"
+```
+
+Ignore it. Having failed to parse the line as Groovy, Declarative tries to read it as a step and
+produces a message about the wrong thing entirely. The first error is the real one — a habit worth
+carrying generally: **read the first error, not the loudest.**
+
+> **Design note.** If a library method is awkward to call, that is information. Many libraries
+> avoid `x.method()` for this exact reason and ship a separate `vars/cleanupWorkspace.groovy`
+> instead, so callers write `cleanupWorkspace()` with no `script { }` wrapper. Knowing both
+> options — and why one is friendlier to Declarative users — is the real lesson here.
+
 ### When to add a second method, and when not to
 
 Put a method in the same file if it belongs to the **same idea**:
@@ -480,6 +528,8 @@ any warning. Note what it would have taken to stop it. Phase 4 builds exactly th
 | The log prints a literal `${appName}` | Single quotes. Part 2 |
 | `MissingMethodException: … greet() is applicable for argument types: ()` | Wrong number or type of arguments. The message lists what *would* have worked — read that part |
 | `No such DSL method 'cleanup'` | You wrote `cleanup()` instead of `buildApp.cleanup()`. Part 5 |
+| `Method calls on objects not allowed outside "script" blocks` | `buildApp.cleanup()` directly inside `steps { }`. Wrap it in `script { }` — Part 5 |
+| `Missing required parameter: "message"` on that same line | A knock-on error from the one above. Fix the first error and this disappears |
 | `$APP` comes out empty inside `sh` | Shell expansion with nothing set. You probably wanted Groovy's `${}` with double quotes. Part 3 |
 | Your step is missing from Global Variable Reference | `.txt` name mismatch, not pushed, or that job does not load the library |
 | The step does nothing, but the build is green | Missing `()` on a no-argument call. Part 6 |

@@ -33,9 +33,15 @@ pipeline {
             }
         }
 
+        // buildApp.cleanup() is a method call ON an object, not a step call, so
+        // Declarative rejects it inside steps { } with:
+        //     Method calls on objects not allowed outside "script" blocks
+        // script { } is the escape hatch: "treat this as ordinary Groovy".
         stage('Cleanup') {
             steps {
-                buildApp.cleanup()
+                script {
+                    buildApp.cleanup()
+                }
             }
         }
     }
