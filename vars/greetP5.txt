@@ -1,0 +1,27 @@
+<p>
+    <strong>Phase 5 version.</strong> Greets one or more people. The greeting itself is produced by
+    <code>com.learning.phase05.Greeter</code>, a class in <code>src/</code>; this step only reads
+    configuration, validates it and delegates.
+</p>
+
+<h3>Usage</h3>
+<pre>
+greetP5(name: 'Prakash')
+greetP5(names: ['Prakash', 'Asha', 'Ravi'])
+greetP5(name: 'Prakash', greeting: 'Namaste')
+</pre>
+
+<h3>Configuration</h3>
+<table>
+    <tr><th>Key</th><th>Type</th><th>Required</th><th>Default</th></tr>
+    <tr><td><code>name</code></td><td>String</td><td>one of <code>name</code> / <code>names</code></td><td>—</td></tr>
+    <tr><td><code>names</code></td><td>List</td><td>one of <code>name</code> / <code>names</code></td><td>—</td></tr>
+    <tr><td><code>greeting</code></td><td>String</td><td>no</td><td><code>Hello</code></td></tr>
+</table>
+
+<h3>Notes</h3>
+<ul>
+    <li>A class in <code>src/</code> has no connection to the pipeline, so it receives the pipeline
+        as a constructor argument (<code>new Greeter(this)</code>) and calls steps through it:
+        <code>script.echo</code>.</li>
+</ul>
