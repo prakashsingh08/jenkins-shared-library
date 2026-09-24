@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# There is no build output in a shared library repo — keep this file short.
+# Add entries only when something real needs ignoring.
