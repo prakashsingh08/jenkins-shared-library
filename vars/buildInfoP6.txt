@@ -1,0 +1,32 @@
+<p>
+    <strong>Phase 6.</strong> Fills in the <code>build-info.txt</code> template from
+    <code>resources/</code> and writes the result into the build's workspace. Returns the file name.
+</p>
+
+<h3>Usage</h3>
+<pre>
+buildInfoP6(name: 'catalog')
+buildInfoP6(name: 'catalog', file: 'target/build-info.properties')
+
+sh 'cat build-info.txt'          // prove it landed
+archiveArtifacts 'build-info.txt'
+</pre>
+
+<h3>Configuration</h3>
+<table>
+    <tr><th>Key</th><th>Type</th><th>Required</th><th>Default</th></tr>
+    <tr><td><code>name</code></td><td>String</td><td><strong>yes</strong></td><td>—</td></tr>
+    <tr><td><code>file</code></td><td>String</td><td>no</td><td><code>build-info.txt</code></td></tr>
+</table>
+
+<h3>Notes</h3>
+<ul>
+    <li><code>libraryResource</code> returns the file's <em>text</em>. It does not create a file —
+        <code>writeFile</code> does that.</li>
+    <li>Template markers are written <code>@LIKE_THIS@</code>, because <code>${...}</code> would be
+        claimed by Groovy or the shell first.</li>
+    <li><code>@BRANCH@</code> resolves to a placeholder in plain Pipeline jobs:
+        <code>env.BRANCH_NAME</code> only exists for Multibranch and SCM-backed jobs.</li>
+    <li>Never put credentials in a <code>resources/</code> template. A placeholder is correct; a
+        real password in a Git repo is a leak.</li>
+</ul>
