@@ -40,6 +40,14 @@ def call(Map config = [:]) {
             // Phase 5 — logic in a src/ class
             stage('Greet') {
                 steps {
+                    // ---- Phase 8 marker -------------------------------------
+                    // This line exists on `main` but NOT in the v1.0.0 tag.
+                    // Run the same job pinned to @main and to @v1.0.0: one prints
+                    // this, the other does not. That difference IS the versioning
+                    // lesson — a branch moves, a tag does not.
+                    echo 'Running the main branch version of helloPipelineP7'
+                    // ---------------------------------------------------------
+
                     greetP5(name: appName, greeting: greeting)
                 }
             }

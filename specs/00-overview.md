@@ -37,14 +37,18 @@ Phase 2's Jenkins job exists.
 |---|---|---|---|---|
 | 1 | [01-setup-and-repo-layout.md](01-setup-and-repo-layout.md) | Why `vars/` / `src/` / `resources/`; Git doesn't track empty folders; branches vs tags as library versions; HTTPS vs SSH remotes | This repo committed and pushed to GitHub; Jenkins reachable on `localhost:8080` | **Done** |
 | 2 | [02-first-step-hello.md](02-first-step-hello.md) (+ [02a — how `hello()` works, the slow version](02a-how-hello-works-explained.md), [02b — questions & clarifications](02b-questions-and-clarifications.md)) | `call()`, `@Library`, the `_`, registering a Global Pipeline Library in the Jenkins UI, reading library errors | `vars/hello.groovy` + a `hello-library-demo` pipeline job that prints it | **Done** |
-| 3 | [03-steps-with-arguments.md](03-steps-with-arguments.md) | Method arguments, `'` vs `"` interpolation, shell injection, extra methods (`buildApp.cleanup()`), optional parens, `.txt` docs | `vars/greet.groovy`, `vars/buildApp.groovy`, `vars/buildApp.txt` | **In progress** |
-| 4 | [04-configuration-as-a-map.md](04-configuration-as-a-map.md) | Groovy Maps, named arguments as one Map, Groovy truth, Elvis vs `get(k, default)`, validating input, failing fast with `error` | `buildApp(name: 'catalog', skipTests: true)` with defaults and an allow-list check | **Ready to do** |
-| 5 | [05-classes-in-src.md](05-classes-in-src.md) | Why `vars/` files get too big; packages and folder layout; passing `this` as `script` so a class can `echo`/`sh`; `implements Serializable`; what goes where | `src/com/learning/Greeter.groovy` used by a thin `vars/` step | **Ready to do** |
-| 6 | [06-resources-and-templates.md](06-resources-and-templates.md) | `libraryResource` vs `writeFile`, placeholder templating, reading resources from a `src/` class, why secrets never go here | `resources/com/learning/banner.txt` printed by a step + a template written to the workspace | **Ready to do** |
-| 7 | [07-end-to-end-hello-pipeline.md](07-end-to-end-hello-pipeline.md) | A step that *is* the whole pipeline; the four Declarative rules; Scripted vs Declarative; `post` and `currentBuild`; the payoff and its danger | `vars/helloPipeline.groovy` + a 6-line consumer Jenkinsfile | **Ready to do** |
-| 8 | [08-versioning-and-troubleshooting.md](08-versioning-and-troubleshooting.md) | Branch vs tag vs SHA, SemVer and the moving `v1` tag, who pins to what, **Replay**, a full error cheat-sheet, deprecating a config key | A `v1.0.0` tag + your own `specs/troubleshooting.md` | **Ready to do** |
+| 3 | [03-steps-with-arguments.md](03-steps-with-arguments.md) | Method arguments, `'` vs `"` interpolation, shell injection, extra methods (`buildApp.cleanup()`), optional parens, `.txt` docs | `vars/greetP3.groovy`, `vars/buildAppP3.groovy`, `vars/buildAppP3.txt` | **Code pushed** |
+| 4 | [04-configuration-as-a-map.md](04-configuration-as-a-map.md) | Groovy Maps, named arguments as one Map, Groovy truth, Elvis vs `get(k, default)`, validating input, failing fast with `error` | `vars/buildAppP4.groovy` with defaults and an allow-list check | **Code pushed** |
+| 5 | [05-classes-in-src.md](05-classes-in-src.md) | Why `vars/` files get too big; packages and folder layout; passing `this` as `script` so a class can `echo`/`sh`; `implements Serializable`; what goes where | `src/com/learning/phase05/Greeter.groovy` used by a thin `greetP5` step | **Code pushed** |
+| 6 | [06-resources-and-templates.md](06-resources-and-templates.md) | `libraryResource` vs `writeFile`, placeholder templating, reading resources from a `src/` class, why secrets never go here | `resources/com/learning/phase06/*` printed by `bannerP6` + written by `buildInfoP6` | **Code pushed** |
+| 7 | [07-end-to-end-hello-pipeline.md](07-end-to-end-hello-pipeline.md) | A step that *is* the whole pipeline; the four Declarative rules; Scripted vs Declarative; `post` and `currentBuild`; the payoff and its danger | `vars/helloPipelineP7.groovy` + a 6-line consumer Jenkinsfile | **Code pushed** |
+| 8 | [08-versioning-and-troubleshooting.md](08-versioning-and-troubleshooting.md) | Branch vs tag vs SHA, SemVer and the moving `v1` tag, who pins to what, **Replay**, a full error cheat-sheet, deprecating a config key | A `v1.0.0` tag + [specs/troubleshooting.md](troubleshooting.md) | **Code pushed** |
 
 Update the **Status** column as you finish each phase.
+
+**Status meanings:** *Done* — finished, including the exercises. *Code pushed* — the library files
+exist and run, but the phase's exercises (predicting, breaking things on purpose) are still yours to
+do; that is where most of the learning is.
 
 ### Extension phases (optional, after the course)
 
