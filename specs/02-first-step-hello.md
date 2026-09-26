@@ -100,6 +100,9 @@ class hello extends Script {          // generated for you — you never see thi
 ```
 
 **Step 2: every `Script` carries a `Binding` — a bag of names it can see.**
+
+> New to the word *binding*? It is unpacked slowly, with a runnable plain-Groovy example, in
+> [02a section 9](02a-how-hello-works-explained.md#9-what-is-a-binding).
 A `Binding` is a Map of name → value that the script consults for any name it cannot resolve on its
 own. Normally it is empty. Jenkins does not leave it empty.
 

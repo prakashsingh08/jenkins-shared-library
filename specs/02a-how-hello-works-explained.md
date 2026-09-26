@@ -313,27 +313,134 @@ giving it the Pipeline's *binding*, so names can be resolved against the live bu
 
 ## 9. What is a "binding"?
 
-Ignore the intimidating word.
+Ignore the intimidating word for a moment.
 
-> **Binding = a bag of things the script can reach by name.**
+> **Binding = a bag of named things a script can reach.**
 
-Conceptually, the Pipeline's bag holds:
+That is the whole idea. The rest of this section is just showing you the bag.
+
+### 9.1 Where names normally come from
+
+When Groovy runs a line like:
+
+```groovy
+echo 'Hello'
+```
+
+it has to work out what `echo` means. Normally there are only two places it can look:
 
 ```text
-Pipeline context
+echo 'Hello'
+   │
+   ├── is `echo` defined in this file?          (a method you wrote)
+   └── is `echo` defined in a parent class?     (something you extended)
+```
+
+If neither, it is an error. In an ordinary Groovy file you would have to write the method yourself,
+or import it from somewhere.
+
+### 9.2 A script has a third place: its binding
+
+A Groovy **script** — remember section 3, a file with methods at the top level and no `class` — gets
+one extra thing that a normal class does not: a `Binding` object attached to it.
+
+Think of it as a labelled box that travels with the script:
+
+```text
+   your script                    its binding (a box of names)
+   ───────────                    ────────────────────────────
+   def call() {                   ┌───────────────────────┐
+       echo 'Hello'   ──────────► │  name      → value    │
+   }                              │  ─────────────────    │
+                                  │  (empty by default)   │
+                                  └───────────────────────┘
+```
+
+In plain Groovy, that box is **empty**, so nothing changes — `echo` still fails.
+
+### 9.3 A tiny example, outside Jenkins
+
+This is ordinary Groovy, nothing to do with Jenkins. It shows a binding being filled by hand:
+
+```groovy
+def binding = new Binding()
+binding.setVariable('greeting', 'Hello')     // put a name in the box
+
+def shell = new GroovyShell(binding)
+shell.evaluate("println greeting")           // the script finds it → prints Hello
+```
+
+The script never declares `greeting`. It works because the name was in the binding when the script
+ran. **That is the entire mechanism Jenkins uses** — it just fills a much bigger box.
+
+### 9.4 What Jenkins puts in the box
+
+When your pipeline runs, Jenkins builds a binding and fills it with everything a pipeline can use:
+
+```text
+the pipeline's binding
 │
-├── echo
+├── echo                ← steps
 ├── sh
 ├── junit
 ├── archiveArtifacts
 ├── withCredentials
-├── env
+│
+├── env                 ← values
 ├── params
-└── currentBuild
+├── currentBuild
+└── scm
 ```
 
-Your `vars/` script is plugged into *that* bag — not a fresh empty one. That connection is what makes
-the next step possible.
+And here is the part that matters:
+
+> When Jenkins loads your `vars/` file, it does **not** give it a fresh empty binding. It gives it
+> **the same binding the running pipeline is using.**
+
+```text
+Jenkinsfile (the pipeline script)        vars/helloP2.groovy
+        │                                        │
+        └──────────────┬─────────────────────────┘
+                       ▼
+            ONE shared binding
+            echo, sh, env, params, currentBuild …
+```
+
+Your library file is plugged into the pipeline's own box of names. That is why it can use `echo`
+without importing anything — and it is the single fact this whole document is building towards.
+
+### 9.5 Two things a binding is not
+
+* **It is not a list of your methods.** Your own `call()` and `cleanup()` are methods on the script;
+  they are found the normal way, not through the binding.
+* **It is not permanent storage.** The binding belongs to one build. Two builds have two bindings,
+  and nothing you put in one is visible to the other. (Section 11 in Phase 2's spec makes the same
+  point about `vars/` scripts being created once per build.)
+
+### 9.6 Why the word exists at all
+
+"Binding" is just the programming term for *tying a name to a value*. When you write
+`def x = 5`, you are binding the name `x` to the value `5`. Groovy's `Binding` object is a bag of
+exactly those name→value ties, kept outside the script so that whoever starts the script can decide
+what goes in it.
+
+Jenkins is the one who starts your script. So Jenkins decides what is in the bag — which is how a
+file you wrote ends up able to call steps you never defined.
+
+> **One sentence to keep:** a binding is a box of names that comes with a script, and Jenkins hands
+> your library file the *pipeline's* box instead of an empty one.
+
+### 9.7 You already saw it in the tests
+
+In Phase 11 the test for `buildAppP4` contains this line:
+
+```groovy
+binding.setVariable('env', [BUILD_NUMBER: '1', JOB_NAME: 'test-job'])
+```
+
+That is a test filling the box by hand, exactly like the `GroovyShell` example in 9.3 — because
+there is no real Jenkins around to do it. Seeing the same mechanism used deliberately in a test is
+usually the moment it stops feeling like magic.
 
 ---
 
