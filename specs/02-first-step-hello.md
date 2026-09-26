@@ -22,6 +22,29 @@ error. That is the actual skill this phase teaches.
 
 ## Concepts to understand first
 
+### The whole phase in one picture
+
+![Hawk Eye View: where all the terminology exists and how hello() works](sl_ph2.png)
+
+Everything below is this diagram, unpacked one box at a time:
+
+| Box | Unpacked in |
+|---|---|
+| 1 — your code in the library repo | §1, and Phase 1's layout |
+| 2 — the Jenkinsfile that calls it | §3, `@Library` and the `_` |
+| 3 — what Jenkins does internally (`class hello extends Script`, the binding) | §2, steps 1–3 |
+| 4 — `hello()` → `hello.call()` | §1 |
+| 5 — how `echo` is resolved, down to `methodMissing` | §2, step 4 |
+| 6 — where each concept lives | the Glossary in [00-overview.md](00-overview.md) |
+
+Two naming differences between the diagram and this repo, so they do not trip you up:
+
+* The diagram writes `@Library('my-shared-lib')`; this course registers the library as
+  **`shared-lib`**.
+* The diagram's step is `hello()` from `vars/hello.groovy`; the file you actually write is
+  `vars/helloP2.groovy`, so the step is `helloP2()` — the `P2` is this repo's one-version-per-phase
+  convention, nothing more.
+
 ### 1. How `hello()` reaches `vars/hello.groovy`
 
 ```

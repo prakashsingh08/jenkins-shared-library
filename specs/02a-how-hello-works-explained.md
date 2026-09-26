@@ -489,6 +489,13 @@ script.env
 
 ## 13. One picture to remember
 
+The single-page version of everything above — worth a look now that each piece makes sense on its
+own — is at the top of [Phase 2's Concepts section](02-first-step-hello.md#concepts-to-understand-first).
+Box 5 in it is section 10 of this doc; box 6 is a map of which words belong to Groovy, which to
+Jenkins, and which to your own code.
+
+And the picture for the `vars/` → `src/` handover:
+
 ```text
                   Jenkinsfile
                        │
