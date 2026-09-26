@@ -319,6 +319,29 @@ Ignore the intimidating word for a moment.
 
 That is the whole idea. The rest of this section is just showing you the bag.
 
+![Where the binding exists and how echo is resolved](sl_ph2a.png)
+
+Sections 9 and 10 are this picture, taken slowly:
+
+| Box | Where it is explained |
+|---|---|
+| 1 — your library file in Git | section 3 |
+| 2 — Jenkins compiles it into a `class … extends Script` | section 8, and Phase 2 Concepts §2 |
+| 3 — **the binding, shared between the Jenkinsfile and your library script** | 9.2 – 9.4 |
+| 4 — the steps and objects the names point at | 9.4 |
+| 5 — how `echo` is resolved, step by step | section 10 |
+| 6 — key points | 9.5 and 9.6 |
+
+**One honest correction to the diagram.** Box 5 shows `echo` being found at "name in binding?".
+That is a fair simplification, and it is how it *behaves* — but the precise path for a **step** is
+the `methodMissing` hook in section 10: the name is not literally sitting in the binding, Jenkins
+intercepts the failed lookup and matches it against its registry of installed steps. The things that
+genuinely are reached through the binding are the **objects** — `env`, `params`, `currentBuild`,
+`scm`.
+
+Keep the diagram's version for everyday reasoning; reach for section 10's when an error message
+mentions `methodMissing` and you need to know why.
+
 ### 9.1 Where names normally come from
 
 When Groovy runs a line like:
