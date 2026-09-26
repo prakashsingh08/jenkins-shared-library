@@ -1,0 +1,40 @@
+<p>
+    <strong>Phase 7.</strong> An entire pipeline in one call. The consuming repo's Jenkinsfile
+    becomes the <code>@Library</code> line plus this step — no <code>agent</code>, no
+    <code>stages</code>, no <code>post</code> block.
+</p>
+
+<h3>Usage</h3>
+<pre>
+@Library('shared-lib') _
+
+helloPipelineP7(
+    name: 'catalog',
+    greeting: 'Namaste'
+)
+</pre>
+
+<h3>Configuration</h3>
+<table>
+    <tr><th>Key</th><th>Type</th><th>Required</th><th>Default</th></tr>
+    <tr><td><code>name</code></td><td>String</td><td><strong>yes</strong></td><td>—</td></tr>
+    <tr><td><code>greeting</code></td><td>String</td><td>no</td><td><code>Hello</code></td></tr>
+    <tr><td><code>skipTests</code></td><td>boolean</td><td>no</td><td><code>false</code></td></tr>
+</table>
+
+<h3>What it runs</h3>
+<ol>
+    <li><strong>Greet</strong> — <code>greetP5</code>, backed by a class in <code>src/</code></li>
+    <li><strong>Build</strong> — <code>buildAppP4</code>, with validation (pretend build)</li>
+    <li><strong>Banner</strong> — <code>bannerP6</code>, from <code>resources/</code></li>
+    <li><strong>Build info</strong> — template filled, written to the workspace, archived</li>
+    <li><strong>post</strong> — success / failure / always, using <code>currentBuild</code></li>
+</ol>
+
+<h3>What the consuming repo gives up</h3>
+<p>
+    Control over the agent, the stages and the failure behaviour — in exchange for consistency and
+    for fixes arriving without a pull request in every repo. A project that needs something
+    different should call the individual steps (<code>buildAppP4</code>, <code>greetP5</code>) and
+    assemble its own pipeline instead.
+</p>
