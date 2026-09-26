@@ -138,11 +138,13 @@ Groovy resolves the call `echo 'Hello'` in this order:
 ```
 
 `methodMissing` is a standard Groovy hook: a class can implement it to intercept calls to methods
-that do not exist. If Jenkins finds no matching step either, the build
-fails with `No such DSL method 'x' found among steps` — traced in full in
-[02c Q1](02c-step-registry-and-missing-steps.md). Jenkins' pipeline script implements it as "treat the unknown method name as a
+that do not exist. Jenkins' pipeline script implements it as "treat the unknown method name as a
 pipeline step." That single hook is what makes `echo`, `sh`, `junit`, `archiveArtifacts`,
 `withCredentials` and every plugin-provided step usable without importing anything.
+
+And if Jenkins does not recognise the name either? The build fails with
+`No such DSL method 'x' found among steps` — that branch, and how to browse your own Jenkins' step
+registry, is [02c](02c-step-registry-and-missing-steps.md).
 
 The same applies to **properties**, via the matching `propertyMissing` hook — which is why `env`,
 `params` and `currentBuild` are readable in your file with no setup.
