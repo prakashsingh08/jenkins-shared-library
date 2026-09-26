@@ -134,6 +134,47 @@ Full detail, prerequisites and the working agreement: **[`specs/00-overview.md`]
 
 ---
 
+## Step catalogue
+
+Every step this library exposes, newest version of each idea last. The full
+documentation for a step is in its `vars/*.txt` file, and Jenkins renders it at
+**your job → Pipeline Syntax → Global Variable Reference**.
+
+| Step | Phase | What it does |
+|---|---|---|
+| `helloP2()` | 2 | Echoes a greeting. The smallest possible step |
+| `greetP3(name)` | 3 | One positional argument |
+| `buildAppP3(appName)` + `.cleanup()` | 3 | A second method on a step. **No validation** — kept as a contrast |
+| `buildAppP4(Map)` | 4 | Map config, defaults, allow-list validation |
+| `greetP5(Map)` | 5 | Backed by `com.learning.phase05.Greeter` in `src/` |
+| `bannerP6(Map)` | 6 | Prints a banner held in `resources/` |
+| `buildInfoP6(Map)` | 6 | Fills a template and writes it into the workspace |
+| `helloPipelineP7(Map)` | 7 | An entire pipeline in one call |
+| `buildJavaP9(Map)` | 9 | A real Maven build on a container agent |
+| `withCloudsmithP10(id) { }` | 10 | Binds credentials for the length of a block |
+| `buildJavaP10(Map)` | 10 | `buildJavaP9` plus a guarded Publish stage |
+| `cpsDemoP12(Map)` | 12 | Runnable CPS / `@NonCPS` experiments |
+| `versionInfoP12(Map)` | 12 | Computation in a class, steps in the step |
+| `buildAppP13(Map)` | 13 | `buildAppP4` with a deprecated config key, done properly |
+
+## Policy, changes and errors
+
+| Document | Answers |
+|---|---|
+| [GOVERNANCE.md](GOVERNANCE.md) | Which version should I pin to? Who may merge and tag? What builds the library? |
+| [CHANGELOG.md](CHANGELOG.md) | What do I get, and what might break, if I move my pin? |
+| [specs/troubleshooting.md](specs/troubleshooting.md) | What does this error mean? |
+
+## Tests
+
+```bash
+docker run --rm -v "$PWD":/app -w /app -v "$HOME/.m2":/root/.m2 \
+  maven:3.9-eclipse-temurin-17 mvn -B test
+```
+
+Tests live in `test/phaseNN/`. Jenkins never loads them — like `specs/` and
+`examples/`, that folder is ours. See [Phase 11](specs/11-testing-the-library.md).
+
 ## Related repos in this workspace
 
 | Repo | Role |

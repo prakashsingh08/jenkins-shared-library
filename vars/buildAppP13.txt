@@ -1,0 +1,31 @@
+<p>
+    <strong>Phase 13.</strong> The same build as <code>buildAppP4</code>, with the config key
+    <code>name</code> renamed to <code>appName</code>. Both spellings work; the old one logs a
+    deprecation warning and will be removed in the next <strong>major</strong> release.
+</p>
+
+<h3>Usage</h3>
+<pre>
+buildAppP13(appName: 'catalog')                    // preferred
+buildAppP13(name: 'catalog')                       // deprecated, still works, warns
+buildAppP13(appName: 'catalog', skipTests: true)
+</pre>
+
+<h3>Configuration</h3>
+<table>
+    <tr><th>Key</th><th>Type</th><th>Required</th><th>Default</th></tr>
+    <tr><td><code>appName</code></td><td>String</td><td><strong>yes</strong></td><td>—</td></tr>
+    <tr><td><code>name</code></td><td>String</td><td><em>deprecated alias for appName</em></td><td>—</td></tr>
+    <tr><td><code>image</code></td><td>String</td><td>no</td><td><code>maven:3.9-eclipse-temurin-17</code></td></tr>
+    <tr><td><code>skipTests</code></td><td>boolean</td><td>no</td><td><code>false</code></td></tr>
+</table>
+
+<h3>Migrating</h3>
+<ol>
+    <li>Change <code>name:</code> to <code>appName:</code> in your Jenkinsfile.</li>
+    <li>Rebuild. The warning disappears; nothing else changes.</li>
+</ol>
+<p>
+    Giving both keys with <em>different</em> values is an error, not a guess — the step stops rather
+    than quietly building the wrong application.
+</p>
