@@ -1,0 +1,38 @@
+<p>
+    <strong>Phase 10.</strong> Runs a block of steps with Cloudsmith credentials bound to the
+    environment variables <code>CS_USER</code> and <code>CS_PASS</code>. The variables exist only
+    inside the block.
+</p>
+
+<h3>Usage</h3>
+<pre>
+withCloudsmithP10 {
+    sh 'mvn -B deploy -s settings.xml'
+}
+
+withCloudsmithP10('other-credentials-id') {
+    sh 'curl -u $CS_USER:$CS_PASS https://...'
+}
+</pre>
+
+<h3>Parameters</h3>
+<ul>
+    <li><code>credentialsId</code> (String, optional, default <code>cloudsmith-creds</code>) — the ID
+        of a <em>Username with password</em> credential in Jenkins.</li>
+    <li><code>body</code> (Closure, required) — the steps to run with the credentials bound. Written
+        as a block after the parentheses.</li>
+</ul>
+
+<h3>Use single quotes inside the block</h3>
+<pre>
+sh 'mvn deploy -Dpass=$CS_PASS'      // the SHELL expands it — safe
+sh "mvn deploy -Dpass=${CS_PASS}"    // GROOVY expands it — the password is printed in the log
+</pre>
+
+<h3>What masking does not cover</h3>
+<p>
+    Jenkins replaces a known secret with <code>****</code> by matching the exact string. It does not
+    follow the value once it changes shape: base64-encode it, write it to a file and
+    <code>cat</code> that file, or archive the file, and nothing is masked. Never echo a secret, and
+    delete any credentials file in a <code>finally</code>.
+</p>

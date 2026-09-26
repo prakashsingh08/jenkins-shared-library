@@ -1,0 +1,49 @@
+<p>
+    <strong>Phase 10.</strong> Everything <code>buildJavaP9</code> does, plus a Publish stage that
+    deploys to Cloudsmith using a credential held in Jenkins. The generated
+    <code>settings-cloudsmith.xml</code> is deleted in a <code>finally</code>, whether the deploy
+    succeeded or not.
+</p>
+
+<h3>Usage</h3>
+<pre>
+@Library('shared-lib@main') _
+
+buildJavaP10(name: 'java-maven-proj01')
+
+buildJavaP10(
+    name: 'java-maven-proj01',
+    credentialsId: 'cloudsmith-creds',
+    publishBranch: 'main'
+)
+</pre>
+
+<h3>Configuration</h3>
+<table>
+    <tr><th>Key</th><th>Type</th><th>Required</th><th>Default</th></tr>
+    <tr><td><code>name</code></td><td>String</td><td><strong>yes</strong></td><td>—</td></tr>
+    <tr><td><code>credentialsId</code></td><td>String</td><td>no</td><td><code>cloudsmith-creds</code></td></tr>
+    <tr><td><code>serverId</code></td><td>String</td><td>no</td><td><code>cloudsmith</code> (must match the <code>distributionManagement</code> id in the pom)</td></tr>
+    <tr><td><code>publishBranch</code></td><td>String</td><td>no</td><td><code>main</code></td></tr>
+    <tr><td><code>image</code></td><td>String</td><td>no</td><td><code>maven:3.9-eclipse-temurin-17</code></td></tr>
+    <tr><td><code>m2Volume</code></td><td>String</td><td>no</td><td><code>jenkins-maven-repo</code></td></tr>
+    <tr><td><code>skipTests</code></td><td>boolean</td><td>no</td><td><code>false</code></td></tr>
+    <tr><td><code>artifacts</code></td><td>String (glob)</td><td>no</td><td><code>target/*.jar</code></td></tr>
+    <tr><td><code>testResults</code></td><td>String (glob)</td><td>no</td><td><code>target/surefire-reports/*.xml</code></td></tr>
+</table>
+
+<h3>When Publish runs</h3>
+<p>
+    Only when <code>env.BRANCH_NAME</code> equals <code>publishBranch</code>. In a plain Pipeline job
+    <code>BRANCH_NAME</code> is null, so the stage is skipped — the safe default for a stage that
+    publishes. Use a Multibranch job, or an SCM-backed job on the right branch, to exercise it.
+</p>
+
+<h3>Secrets</h3>
+<ul>
+    <li>The config Map takes a credential <strong>ID</strong>, never a password.</li>
+    <li>The generated settings file contains <code>${env.CS_USER}</code> /
+        <code>${env.CS_PASS}</code> as literal text; Maven resolves them from its environment, so
+        the secret is never written to disk.</li>
+    <li>The file is deleted in a <code>finally</code>. Never archive it.</li>
+</ul>
