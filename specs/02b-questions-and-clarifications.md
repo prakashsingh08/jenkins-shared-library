@@ -174,4 +174,6 @@ It never chooses between `call()`, `hello()` and `goodbye()`. `()` targets `call
 
 ---
 
+See also [02c — the step registry, and what happens when a step is *not* found](02c-step-registry-and-missing-steps.md).
+
 *Next question goes here.*

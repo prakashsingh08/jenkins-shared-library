@@ -19,6 +19,8 @@ error. That is the actual skill this phase teaches.
 > It builds the same model from zero with more pictures and smaller steps, then sends you back here.
 > Specific questions that came up along the way are answered in
 > [02b — Questions and clarifications](02b-questions-and-clarifications.md).
+> What happens when a step is *not* found, and how to inspect your own Jenkins' step
+> registry, is in [02c](02c-step-registry-and-missing-steps.md).
 
 ## Concepts to understand first
 
@@ -136,7 +138,9 @@ Groovy resolves the call `echo 'Hello'` in this order:
 ```
 
 `methodMissing` is a standard Groovy hook: a class can implement it to intercept calls to methods
-that do not exist. Jenkins' pipeline script implements it as "treat the unknown method name as a
+that do not exist. If Jenkins finds no matching step either, the build
+fails with `No such DSL method 'x' found among steps` — traced in full in
+[02c Q1](02c-step-registry-and-missing-steps.md). Jenkins' pipeline script implements it as "treat the unknown method name as a
 pipeline step." That single hook is what makes `echo`, `sh`, `junit`, `archiveArtifacts`,
 `withCredentials` and every plugin-provided step usable without importing anything.
 

@@ -502,6 +502,9 @@ Do not memorise `methodMissing` yet. For now:
 
 > **Jenkins catches the unknown method name and checks whether it is a Pipeline step.**
 
+And if Jenkins does *not* recognise it either? That branch, plus what the step registry actually
+is and how to browse your own, is [02c](02c-step-registry-and-missing-steps.md).
+
 That one hook is why `echo`, `sh`, `junit`, `withCredentials` and every plugin-provided step work
 with no import anywhere.
 
