@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Phase 11 — the test project for this library.
+
+  Jenkins ignores this file completely. It only loads vars/, src/ and resources/;
+  pom.xml, test/, specs/ and examples/ are ours.
+
+  Run the tests (no local Maven or JDK needed):
+
+      docker run --rm -v "$PWD":/app -w /app -v "$HOME/.m2":/root/.m2 \
+        maven:3.9-eclipse-temurin-17 mvn -B test
+
+  VERSIONS: the pairing that matters is jenkins-pipeline-unit <-> Groovy. A mismatch
+  produces confusing compile errors rather than a clear message. If dependency
+  resolution fails, check what is current:
+
+      https://repo.maven.apache.org/maven2/com/lesfurets/jenkins-pipeline-unit/maven-metadata.xml
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.learning</groupId>
+    <artifactId>jenkins-shared-library</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <groovy.version>3.0.19</groovy.version>
+        <jpu.version>1.19</jpu.version>
+        <junit.version>4.13.2</junit.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>${groovy.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- The fake Jenkins: provides echo / sh / error / env and records every call. -->
+        <dependency>
+            <groupId>com.lesfurets</groupId>
+            <artifactId>jenkins-pipeline-unit</artifactId>
+            <version>${jpu.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- Tests live in test/, not src/test/groovy, so that src/ stays exactly what
+             Jenkins loads and nothing else. -->
+        <testSourceDirectory>test</testSourceDirectory>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compileTests</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <!-- Groovy tests compile to .class files; match on those. -->
+                    <includes>
+                        <include>**/*Test.class</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
