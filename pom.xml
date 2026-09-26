@@ -38,11 +38,11 @@
     </properties>
 
     <dependencies>
+        <!-- Not test-scoped: src/ classes are compiled with it too. -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy</artifactId>
             <version>${groovy.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -62,8 +62,10 @@
     </dependencies>
 
     <build>
-        <!-- Tests live in test/, not src/test/groovy, so that src/ stays exactly what
+        <!-- src/ is the library's own class folder — the same one Jenkins loads.
+             Tests live in test/, not src/test/groovy, so src/ stays exactly what
              Jenkins loads and nothing else. -->
+        <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
 
         <plugins>
@@ -74,6 +76,9 @@
                 <executions>
                     <execution>
                         <goals>
+                            <!-- compile: the src/ classes the tests import
+                                 compileTests: the tests themselves -->
+                            <goal>compile</goal>
                             <goal>compileTests</goal>
                         </goals>
                     </execution>
