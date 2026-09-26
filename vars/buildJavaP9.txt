@@ -1,0 +1,39 @@
+<p>
+    <strong>Phase 9.</strong> Runs a real Maven build — compile, test, package, archive — inside a
+    Maven container, with the dependency cache kept in a named Docker volume.
+</p>
+
+<h3>Usage</h3>
+<pre>
+@Library('shared-lib@main') _
+
+buildJavaP9(name: 'java-maven-proj01')
+</pre>
+
+<h3>Requires a job that checks out source</h3>
+<p>
+    The job must be <strong>Pipeline script from SCM</strong> or <strong>Multibranch</strong>. An
+    inline <em>Pipeline script</em> job has an empty workspace, so Maven reports
+    <code>there is no POM in this directory</code>.
+</p>
+
+<h3>Configuration</h3>
+<table>
+    <tr><th>Key</th><th>Type</th><th>Required</th><th>Default</th></tr>
+    <tr><td><code>name</code></td><td>String</td><td><strong>yes</strong></td><td>—</td></tr>
+    <tr><td><code>image</code></td><td>String</td><td>no</td><td><code>maven:3.9-eclipse-temurin-17</code></td></tr>
+    <tr><td><code>m2Volume</code></td><td>String</td><td>no</td><td><code>jenkins-maven-repo</code></td></tr>
+    <tr><td><code>skipTests</code></td><td>boolean</td><td>no</td><td><code>false</code></td></tr>
+    <tr><td><code>artifacts</code></td><td>String (glob)</td><td>no</td><td><code>target/*.jar</code></td></tr>
+    <tr><td><code>testResults</code></td><td>String (glob)</td><td>no</td><td><code>target/surefire-reports/*.xml</code></td></tr>
+</table>
+
+<h3>Notes</h3>
+<ul>
+    <li><code>APP_VERSION</code> is set to <code>1.0.${BUILD_NUMBER}</code> and passed to Maven as
+        <code>-Drevision</code>.</li>
+    <li><code>junit</code> runs in <code>post { always }</code> — a failing Test stage is exactly
+        when the report matters most.</li>
+    <li>Failing tests make the build <strong>UNSTABLE</strong> (yellow), not FAILED (red).</li>
+    <li>Removing the <code>m2Volume</code> mount makes every build re-download all dependencies.</li>
+</ul>
