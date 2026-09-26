@@ -1,0 +1,52 @@
+<p>
+    <strong>Phase 14.</strong> <code>buildJavaP9</code> with the checks run in parallel, the jar
+    moved between agents with <code>stash</code>/<code>unstash</code>, and a timeout so a hung build
+    stops occupying an agent.
+</p>
+
+<h3>Usage</h3>
+<pre>
+@Library('shared-lib@main') _
+
+buildJavaP14(name: 'java-maven-proj01')
+
+buildJavaP14(
+    name: 'java-maven-proj01',
+    failFast: true,
+    timeoutMinutes: 20
+)
+</pre>
+
+<h3>Configuration</h3>
+<table>
+    <tr><th>Key</th><th>Type</th><th>Required</th><th>Default</th></tr>
+    <tr><td><code>name</code></td><td>String</td><td><strong>yes</strong></td><td>—</td></tr>
+    <tr><td><code>failFast</code></td><td>boolean</td><td>no</td><td><code>false</code></td></tr>
+    <tr><td><code>timeoutMinutes</code></td><td>int</td><td>no</td><td><code>30</code></td></tr>
+    <tr><td><code>image</code></td><td>String</td><td>no</td><td><code>maven:3.9-eclipse-temurin-17</code></td></tr>
+    <tr><td><code>m2Volume</code></td><td>String</td><td>no</td><td><code>jenkins-maven-repo</code></td></tr>
+    <tr><td><code>skipTests</code></td><td>boolean</td><td>no</td><td><code>false</code></td></tr>
+    <tr><td><code>artifacts</code></td><td>String (glob)</td><td>no</td><td><code>target/*.jar</code></td></tr>
+    <tr><td><code>testResults</code></td><td>String (glob)</td><td>no</td><td><code>target/surefire-reports/*.xml</code></td></tr>
+</table>
+
+<h3>Before you assume this is faster</h3>
+<ul>
+    <li>Three branches on a two-CPU agent compete; you pay the coordination cost and gain nothing.</li>
+    <li>Interleaved logs are harder to read — <code>timestamps()</code> is on for that reason.</li>
+    <li>Measure: the build duration is echoed in <code>post</code>, and the stage view shows
+        per-stage times. Write the before number down.</li>
+</ul>
+
+<h3><code>failFast</code></h3>
+<p>
+    <code>true</code> kills the remaining branches as soon as one fails — right when the branches
+    are gates. <code>false</code> lets them all finish, so you see everything that is broken in one
+    run. Neither is universally correct, which is why it is a config key.
+</p>
+
+<h3>Related</h3>
+<p>
+    <code>parallelDemoP14</code> shows branches built at runtime from a list, including the
+    closure-capture bug where every branch runs the last value.
+</p>

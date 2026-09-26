@@ -156,6 +156,8 @@ documentation for a step is in its `vars/*.txt` file, and Jenkins renders it at
 | `cpsDemoP12(Map)` | 12 | Runnable CPS / `@NonCPS` experiments |
 | `versionInfoP12(Map)` | 12 | Computation in a class, steps in the step |
 | `buildAppP13(Map)` | 13 | `buildAppP4` with a deprecated config key, done properly |
+| `parallelDemoP14(Map)` | 14 | Branches built at runtime, including the closure-capture bug |
+| `buildJavaP14(Map)` | 14 | `buildJavaP9` with parallel checks, `stash`/`unstash` and a timeout |
 
 ## Policy, changes and errors
 
