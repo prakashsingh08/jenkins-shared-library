@@ -59,6 +59,7 @@ The eight phases above are complete on their own. These go further, when you wan
 | 9 | [09-from-pretend-to-real-maven.md](09-from-pretend-to-real-maven.md) | Docker agents and the `.m2` cache volume; why an inline job has no source code; `checkout scm`; `junit`, `archiveArtifacts`, UNSTABLE vs FAILED; what belongs in the library vs the app repo | `vars/buildJava.groovy` running a real Maven build of `java-maven-proj01` from a branch | **Ready to do** |
 | 10 | [10-credentials-and-error-handling.md](10-credentials-and-error-handling.md) | Where secrets live; `withCredentials` vs `environment { credentials() }`; what masking misses; closures and wrapper steps; `try`/`catch`/`finally`, and why swallowing an exception is worse than the failure | `vars/withCloudsmithP10.groovy` + `vars/buildJavaP10.groovy` with a guarded Publish stage | **Code pushed** |
 | 11 | [11-testing-the-library.md](11-testing-the-library.md) | Why `src/` classes are testable and `vars/` scripts are not; a hand-written fake `script`; JenkinsPipelineUnit; what to test and what to skip; the three layers of safety net | A `test/` folder and a `pom.xml`; validation and defaults covered by tests that run in seconds | **Spec only** |
+| 12 | [12-cps-and-noncps.md](12-cps-and-noncps.md) | Why Jenkins rewrites pipeline Groovy; `NotSerializableException` and what causes it; why `for` beats `.each`; `@NonCPS` and its strict rules; why Replay exists | The three parked mysteries explained, plus an audit of your own library | **Spec only** |
 
 ### Why this order
 
